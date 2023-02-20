@@ -20,6 +20,12 @@ sudo ./download.sh
 
 ## Issues
 
-In case you want to use the WAF for SSLTermination (which is haproxy), copy the `haproxy` binary and move it to /opt/bitninja-ssl-termination-sbin as filename ``bitninja-sslt`
+In case you want to use the WAF for SSLTermination (which is haproxy), copy the `haproxy` binary and move it to `/opt/bitninja-ssl-termination-sbin` as filename `bitninja-sslt`
 
 `cp haproxy /opt/bitninja-ssl-termination/sbin/bitninja-sslt`
+
+Additionally, note that you might need to install redis 7.0.3 and nodejs 10.24.1 as well. These are included in the repo as a bianry. 
+
+-- These eventually will be also included in the script, so you don't have to deal with it.
+
+Any problems? Report!
