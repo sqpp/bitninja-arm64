@@ -27,6 +27,13 @@ apt-get download bitninja-ssl-termination:amd64 > /dev/null 2>&1
 apt-get download bitninja-dispatcher:amd64 > /dev/null 2>&1
 apt-get download bitninja-mq:amd64 > /dev/null 2>&1
 
+wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-ssl-termination/haproxy
+wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-mq/bitninja-mq-benchmark
+wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-mq/bitninja-mq-cli
+wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-mq/bitninja-mq-server
+wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-node-dojo/node
+wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-node-dojo/npm
+wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-node-dojo/npx
 
 mkdir -p bitninja-dojo_arm64
 mkdir -p bitninja-python-dojo_arm64
@@ -200,6 +207,12 @@ echo "[BitNinja ARM64 Installer]> BitNinja installed and should be ready to use.
 sudo sed -i "1 s\.*\#! "$phpbin" --php-ini=/opt/bitninja/etc/\1" /opt/bitninja/bitninja
 sudo sed -i "1 s\.*\#! "$phpbin" --php-ini=/opt/bitninja/etc/\1" /usr/sbin/bitninja-config
 sudo sed -i "1 s\.*\#! "$phpbin" --php-ini=/opt/bitninja/etc/\1" /usr/sbin/bitninjacli
+
+cp -R node npx npm /opt/bitninja-node-dojo
+cp -R bitninja-mq-cli bitninja-mq-server bitninja-mq-benchmark /opt/bitninja-mq/bin
+cp -R haproxy /opt/bitninja-ssl-termination/sbin/bitninja-sslt
+
+echo "[BitNinja ARM64 Installer]> Patching Node Dojo, SSLTermination, MQ..."
 
 echo "DO NOT FORGET TO PROVIDE LICENSE"
 echo "bitninja-config --set license_key=<key>"
