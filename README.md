@@ -22,4 +22,4 @@ sudo ./download.sh
 
 In case you want to use the WAF for SSLTermination (which is haproxy), copy the `haproxy` binary and move it to /opt/bitninja-ssl-termination-sbin as filename ``bitninja-sslt`
 
-`cp haproxy /opt/bitninja-ssl-termination/sbin/bitninja-sslt``
+`cp haproxy /opt/bitninja-ssl-termination/sbin/bitninja-sslt`
