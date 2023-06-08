@@ -19,6 +19,7 @@ printf "                        |__/${COLOR_NC}\n";
     printf "https//github.com/sqpp/bitninjarm64\n\n\n";
 
 cd /tmp
+
 echo "[BitNinja ARM64 Installer]> Downloading Prerequisites..."
 apt-get download bitninja-dojo:amd64 > /dev/null 2>&1
 apt-get download bitninja-python-dojo:amd64 > /dev/null 2>&1
@@ -26,6 +27,7 @@ apt-get download bitninja-node-dojo:amd64 > /dev/null 2>&1
 apt-get download bitninja-ssl-termination:amd64 > /dev/null 2>&1
 apt-get download bitninja-dispatcher:amd64 > /dev/null 2>&1
 apt-get download bitninja-mq:amd64 > /dev/null 2>&1
+apt-get download bitninja-waf:amd64 > /dev/null 2>&1
 
 wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-ssl-termination/haproxy
 wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-mq/bitninja-mq-benchmark
@@ -34,6 +36,7 @@ wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-mq/bitninja-mq-
 wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-node-dojo/node
 wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-node-dojo/npm
 wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-node-dojo/npx
+wget -q https://github.com/sqpp/bitninja-arm64/raw/main/bitninja-waf/nginx
 
 mkdir -p bitninja-dojo_arm64
 mkdir -p bitninja-python-dojo_arm64
@@ -41,6 +44,7 @@ mkdir -p bitninja-node-dojo_arm64
 mkdir -p bitninja-ssl-termination_arm64
 mkdir -p bitninja-dispatcher_arm64
 mkdir -p bitninja-mq_arm64
+mkdir -p bitninja-waf_arm64
 
 mv bitninja-dojo_*amd64.deb bitninja-dojo_arm64
 mv bitninja-node-dojo_*amd64.deb bitninja-node-dojo_arm64
@@ -48,6 +52,7 @@ mv bitninja-python-dojo_*amd64.deb bitninja-python-dojo_arm64
 mv bitninja-ssl-termination_*amd64.deb bitninja-ssl-termination_arm64
 mv bitninja-dispatcher_*amd64.deb bitninja-dispatcher_arm64
 mv bitninja-mq_*amd64.deb bitninja-mq_arm64
+mv bitninja-waf_*amd64.deb bitninja-waf_arm64
 
 echo "[BitNinja ARM64 Installer]> Configuring BitNinja Dojo..."
 cd bitninja-dojo_arm64
@@ -178,6 +183,27 @@ cd ..
 rm -Rf bitninja-ssl-termination_arm64
 sudo dpkg -i bitninja-ssl-termination_arm64.deb > /dev/null 2>&1
 
+echo "[BitNinja ARM64 Installer]> Installing BitNinja WAF2.0..."
+cd bitninja-waf_arm64
+ar x bitninja-waf_*amd64.deb > /dev/null 2>&1
+rm bitninja-waf_*amd64.deb
+mkdir control
+mv control.tar.gz control/
+cd control
+tar -zxf control.tar.gz > /dev/null
+rm control.tar.gz
+sed -i "5s/Architecture: amd64/Architecture: arm64/1" control
+tar czf control.tar.gz * > /dev/null
+mv control.tar.gz ..
+cd ..
+rm -r control
+ar r bitninja-waf_arm64.deb debian-binary control.tar.gz data.tar.gz > /dev/null 2>&1
+mv bitninja-waf_arm64.deb ..
+cd ..
+rm -Rf bitninja-waf_arm64
+sudo dpkg -i bitninja-waf_arm64.deb > /dev/null 2>&1
+
+
 echo "[BitNinja ARM64 Installer]> Downloading and Installing BitNinja form Arm64..."
 apt-get download bitninja:amd64 > /dev/null 2>&1
 mkdir bitninja_arm64
@@ -207,13 +233,16 @@ echo "[BitNinja ARM64 Installer]> BitNinja installed and should be ready to use.
 sudo sed -i "1 s\.*\#! "$phpbin" --php-ini=/opt/bitninja/etc/\1" /opt/bitninja/bitninja
 sudo sed -i "1 s\.*\#! "$phpbin" --php-ini=/opt/bitninja/etc/\1" /usr/sbin/bitninja-config
 sudo sed -i "1 s\.*\#! "$phpbin" --php-ini=/opt/bitninja/etc/\1" /usr/sbin/bitninjacli
+sudo sed -i '$ a extension=curl.so' /opt/bitninja/etc/php.ini
 
-cp -R node npx npm /opt/bitninja-node-dojo
-cp -R bitninja-mq-cli bitninja-mq-server bitninja-mq-benchmark /opt/bitninja-mq/bin
-cp -R haproxy /opt/bitninja-ssl-termination/sbin/bitninja-sslt
 
+cp -R /tmp/node /tmp/npx /tmp/npm /opt/bitninja-node-dojo/bin
+cp -R /tmp/bitninja-mq-cli /tmp/bitninja-mq-server /tmp/bitninja-mq-benchmark /opt/bitninja-mq/bin
+cp -R /tmp/haproxy /opt/bitninja-ssl-termination/sbin/bitninja-sslt
+cp -R /tmp/bitninja-waf/sbin/nginx /opt/bitninja-waf/sbin/nginx
 echo "[BitNinja ARM64 Installer]> Patching Node Dojo, SSLTermination, MQ..."
 
-echo "DO NOT FORGET TO PROVIDE LICENSE"
-echo "bitninja-config --set license_key=<key>"
-
+echo "[BitNinja ARM64 Installer]> DO NOT FORGET TO PROVIDE LICENSE"
+echo "[BitNinja ARM64 Installer]> bitninja-config --set license_key=<key>"
+echo "[BitNinja ARM64 Installer]> Restarting bitninja... "
+sudo systemctl restart bitninja.service
