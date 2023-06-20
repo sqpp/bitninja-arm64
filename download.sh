@@ -6,4 +6,4 @@ unzip -q installer.zip -d /tmp
 chmod +x /tmp/installer.sh
 chmod +x /tmp/installer/text.sh
 chmod +x /tmp/installer/graphic.sh
-./tmp/installer.sh
+/tmp/installer.sh
