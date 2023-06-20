@@ -1,6 +1,6 @@
 #!/bin/bash
 
-URL="https://github.com/sqpp/bitninja-arm64/raw/main/installer.zip"
+URL="https://github.com/sqpp/bitninja-arm64/raw/main/files.tar.gz"
 temp_dir=$(mktemp -d)
 
 # Download the installer.zip file
