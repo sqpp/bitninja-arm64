@@ -7,3 +7,4 @@ chmod +x /tmp/installer.sh
 chmod +x /tmp/installer/text.sh
 chmod +x /tmp/installer/graphic.sh
 ./tmp/installer.sh
+rm -rf /tmp/installer*
