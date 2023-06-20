@@ -19,8 +19,6 @@ sudo ./download.sh
 
 ## Issues
 
-You might also need to add curl.so to the BitNinja php.ini in /opt/bitninja/etc/php.ini
-
-`extension=curl.so`
+Non known yet.
 
 Any problems? Report!
