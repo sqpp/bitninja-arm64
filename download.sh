@@ -16,10 +16,10 @@ fi
 # Print the contents of the temporary directory
 ls -l "$temp_dir"
 
-tar -xf "$temp_dir/files.tar.gz" -C "$temp_dir"
+tar -xf "$temp_dir/files.tar.gz" -C "$temp_dir/"
 
 # Set the correct installer directory path
-installer_dir="$temp_dir/installer"
+installer_dir="$temp_dir"
 
 # Print the contents of the installer directory
 ls -l "$installer_dir"
