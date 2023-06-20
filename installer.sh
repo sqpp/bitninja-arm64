@@ -2,7 +2,6 @@
 
 COLOR_LIGHT_RED='\e[1;31m'
 COLOR_NC='\e[0m'
-chmod +x ./installer/graphic.sh ./installer/text.sh
 
 # Check if sudo was used
 if [ "$UID" -eq 0 ]; then
