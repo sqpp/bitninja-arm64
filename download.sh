@@ -6,9 +6,6 @@ temp_dir=$(mktemp -d)
 # Download the installer.zip file
 if command -v curl >/dev/null 2>&1; then
     cd $temp_dir && curl -L $URL | tar zx
-    echo "Downloaded file size: $file_size bytes"
-elif command -v wget >/dev/null 2>&1; then
-    wget -q "$URL" -O "$temp_dir/files.tar.gz"
 else
     echo "Error: Could not find suitable program to download the installer. Please install either curl or wget."
     exit 1

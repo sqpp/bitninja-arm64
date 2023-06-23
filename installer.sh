@@ -3,15 +3,7 @@
 COLOR_LIGHT_RED='\e[1;31m'
 COLOR_NC='\e[0m'
 
-# Check if sudo was used
-if [ "$UID" -eq 0 ]; then
-    return 1
-    cd /tmp
-    URL=""
-    wget $URL
-else
-    echo "[ERROR] Please run it with sudo"
-fi
+
 
 check_arm64() {
     arch=$(uname -m)
@@ -80,7 +72,6 @@ function guiUsable() {
 }
 
 # Function to output installer details
-# Function to output installer details
 output_installer_details() {
     printf "\n\n${COLOR_LIGHT_RED}______ _ _   _   _ _       _          ___                  ____    ___\n";
     printf "| ___ (_) | | \ | (_)     (_)        / _ \                / ___|  /   |\n";
@@ -105,8 +96,7 @@ output_installer_details() {
     echo "------------------"
 }
 
-
-
+function run_install() {
 # Check if the OS is Ubuntu
 if [ "$(lsb_release -si)" != "Ubuntu" ]; then
     echo "This script is intended for Ubuntu only. Exiting..."
@@ -135,27 +125,34 @@ while getopts "d" opt; do
     esac
 done
 
-# Display installer details if in debug mode
-if [ "$debug_mode" = true ]; then
+
+}
+
+
+# Check if sudo was used
+if [ "$UID" -eq 0 ]; then
     output_installer_details
+        
+    # Prompt for installer choice
+    echo "Please select the installer:"
+    echo "1. GUI Installer"
+    echo "2. Text Installer"
+    read -p "[Installer]> Choice: " installer_choice
+    case $installer_choice in
+        1)
+            ./installer/graphic.sh
+        ;;
+        2)
+            ./installer/text.sh
+        ;;
+        *)
+            echo "Invalid choice. Exiting..."
+            exit 1
+        ;;
+    esac
+   
+else
+    echo "[ERROR] Please run it with sudo"
+    exit 1
 fi
 
-# Prompt for installer choice
-echo "Please select the installer:"
-echo "1. GUI Installer"
-echo "2. Text Installer"
-read -p "Enter your choice: " installer_choice
-
-# Execute the corresponding installer
-case $installer_choice in
-    1)
-        ./installer/graphic.sh
-    ;;
-    2)
-        ./installer/text.sh
-    ;;
-    *)
-        echo "Invalid choice. Exiting..."
-        exit 1
-    ;;
-esac
